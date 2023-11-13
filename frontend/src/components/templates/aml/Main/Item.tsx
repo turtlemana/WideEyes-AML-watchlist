@@ -14,7 +14,7 @@ const Item = ({ data }:{data:{ WE_CD:number;
   NATION_NAME:string | null;}}) => {
   const { WE_CD, BIRTHDATE, DATA_SET, NATION_NAME, PROFILE_IMAGE, WHOLE_NAME,TRUE_NAME } = data;
   const handleDetail = (id: number) => router.push(`/individual/${id}`);
-  const DATA_ARR = DATA_SET ? DATA_SET.split(',').map((item:string) => item.trim()) : "";
+  const DATA_ARR = DATA_SET ? DATA_SET.split(';').map((item:string) => item.trim()) : "";
  
   const getTitleFromDataset = useTitleFromDataset();
 
@@ -32,10 +32,10 @@ const Item = ({ data }:{data:{ WE_CD:number;
         </td>
       <td>{TRUE_NAME}</td>
       <td className="text-center">  
-      {BIRTHDATE && BIRTHDATE.split(',').map((date:string, index:number) => (
+      {BIRTHDATE && BIRTHDATE.split(';').map((date:string, index:number) => (
     <div key={index}>{date}</div>
   ))}</td>
-      <td className="pl-3">{NATION_NAME}</td>
+      <td className="pl-3">{NATION_NAME?.split(';')[0]}</td>
       <td className="h-full w-[208px] py-[15px]">
         <div className="flex flex-wrap gap-2 h-full">
           {DATA_ARR && DATA_ARR.map((v:string, i:number) => (

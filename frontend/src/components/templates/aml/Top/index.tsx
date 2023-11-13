@@ -165,6 +165,7 @@ const clearAll = () => {
   let startDate = '';
   let endDate = '';
   
+  console.log(birthString)
   if(birthString){
       if(birthRange === "Exact Match" || birthRange === "Same Year") {
           startDate = birthString;

@@ -62,8 +62,8 @@ const Sanctions = ({data,evidenceData}:Props) => {
   const createEvents = (dataItem: SANCTIONS) => {
     const eventTypes = dataItem.EVENT_TYPE ?  dataItem.EVENT_TYPE.slice(1,-1).split(",") : "";
     const eventDate = dataItem.EVENT_DATE ? dataItem.EVENT_DATE.slice(1,-1).split(",") : "";
-    const eventEvidenceIds =dataItem.EVENT_EVIDENCEID ? dataItem.EVENT_EVIDENCEID.split(',') : "";
-    console.log(eventEvidenceIds)
+    const eventEvidenceIds =dataItem.EVENT_EVIDENCEID ? JSON.parse(dataItem.EVENT_EVIDENCEID.replace(/\b(\w+)\b/g, '"$1"')) : "";
+  
     const events = [];
 
     for (let i = 0; i < eventTypes.length; i++) {

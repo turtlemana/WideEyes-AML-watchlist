@@ -3,50 +3,74 @@ import "styles/globals.css";
 import type { AppContext, AppProps } from "next/app";
 import { SearchProvider } from "contexts/SearchStateContext";
 import { ToggleProvider } from "contexts/toggleContext";
+import { UserProvider, useEmail } from "contexts/UserContext";
 import { useRouter } from "next/router";
 import axios from "axios";
-import {useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { safeLocalStorageGet } from "utils/safeLocalStorage";
 
-export default function App({ Component, pageProps }: AppProps) {
-const router = useRouter();
-const [isLogin, setIsLogin] = useState(false)
-useEffect(() => {
-  checkAuthStatus();
-}, [router.pathname]);
+function InnerApp({ Component, pageProps }: any) {
+  const router = useRouter();
+  const { state,dispatch } = useEmail(); 
+  const [isLogin, setIsLogin] = useState(false);
 
-const checkAuthStatus = async () => {
-  if (router.pathname === '/login') {
-    return;
-  }
-  try {
-    const response = await axios.get('http://localhost:7878/api/validate', {
-      withCredentials: true,
-    });
 
-    if (response.status === 200) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-      router.push("/login"); 
+  const checkAuthStatus = async () => {
+    if (isLogin === false && (router.pathname === '/login')) {
+      return;
     }
-  } catch (error) {
-    setIsLogin(false);
-    router.push("/login"); 
-  }
-};
 
-if (!isLogin && router.pathname !== "/login") {
-  return null; 
-}
+    try {
+      const response = await axios.get('http://localhost:7878/api/validate', {
+        withCredentials: true,
+      });
+      const emailFromStorage = safeLocalStorageGet('email');
+
+
+      if (response.status === 200) {
+        setIsLogin(true);
+        if (emailFromStorage) {
+          dispatch({ type: 'SET_EMAIL', email: emailFromStorage });
+        }        
+      } else {
+        setIsLogin(false);
+        dispatch({ type: 'RESET' }); 
+        if(router.pathname !== '/contact') {
+        router.push("/login")};
+        
+      }
+    } catch (error) {
+      setIsLogin(false);
+      dispatch({ type: 'RESET' });
+      if(router.pathname !== '/contact') {
+      router.push("/login")};
+         }
+  };
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, [router.pathname,isLogin]);
+
+  if (!isLogin && (router.pathname !== "/login" && router.pathname !== "/contact")) {
+    return null;
+  }
 
   return (
-    <SearchProvider>
-      <ToggleProvider>
     <Layout isLogin={isLogin} setIsLogin={setIsLogin} {...pageProps}>
-      <Component setIsLogin={setIsLogin}  {...pageProps} />
+      <Component  setIsLogin={setIsLogin} {...pageProps} />
     </Layout>
-    </ToggleProvider>
-    </SearchProvider>
+  );
+}
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <UserProvider>
+      <SearchProvider>
+        <ToggleProvider>
+          <InnerApp Component={Component} pageProps={pageProps} />
+        </ToggleProvider>
+      </SearchProvider>
+    </UserProvider>
   );
 }
 
@@ -54,7 +78,6 @@ App.getInitialProps = async ({ ctx }: AppContext) => {
   const userAgent = ctx.req
     ? ctx.req.headers["user-agent"]
     : navigator.userAgent;
-  // const isMobile = userAgent?.indexOf("Mobi") !== -1;
-  const isMobile =false
+  const isMobile = false;
   return { pageProps: { isMobile } };
 };

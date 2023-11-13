@@ -11,6 +11,7 @@ const fetcher = (url:string) => axios.get(url).then((res) => res.data)
 
 const AML = () => {
   const {state} :{state:State}=useSearch();
+
   const buildQrSearchURL = (state: State) => {
     if (state.qrCode && state.isQrSearchClicked) {
       return `http://localhost:7878/api/qrSearch?&search=${state.qrCode}&page=${state.page}&view=${state.views}`

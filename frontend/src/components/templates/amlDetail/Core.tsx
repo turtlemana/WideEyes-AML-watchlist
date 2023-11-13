@@ -6,23 +6,22 @@ interface Props {
 }
 
 const Core = ({profileData}:Props) => {
-
   
- const {ADRESS,BIRTHDATE,CONTACT_KEY,CONTACT_VALUE,FIRSTNAME,FIRSTNAME_ALIAS,DEATHDATE
-,GENDER,MIDDLENAME,MIDDLENAME_ALIAS,NOTES,Nation,SURNAME,SURNAME_ALIAS,IDENTI_KEY,IDENTI_VALUE,WE_CD,WHOLE_NAME,NATION_NAME} =profileData
-let processAlias = (alias: string) => {
-  if (alias === null || alias === "NULL" || alias === "") {
-      return [];
-  }
-  let arrayAlias = alias.slice(1, -1).split(",");
-  return arrayAlias.map((item: string) => item === 'NULL' ? '' : item);
-}
+ const {ADRESS,BIRTHDATE,CONTACT_KEY,CONTACT_VALUE,FIRSTNAME,FIRSTNAME_ALIAS,DEATHDATE,WHOLE_NAME_ALIAS
+,GENDER,MIDDLENAME,MIDDLENAME_ALIAS,NOTES,Nation,SURNAME,SURNAME_ALIAS,IDENTI_KEY,IDENTI_VALUE,WE_CD,WHOLE_NAME,NATION_NAME,EU,OFAC_NON_SDN,UN,KOFIU,OFAC_SDN} =profileData
+// let processAlias = (alias: string) => {
+//   if (alias === null || alias === "NULL" || alias === "") {
+//       return [];
+//   }
+//   let arrayAlias = alias.slice(1, -1).split(",");
+//   return arrayAlias.map((item: string) => item === 'NULL' ? '' : item);
+// }
 
 let processField = (field: string | null) => {
   if (field === null || field === "NULL" || field === "") {
     return [];
   }
-  return field.split(",").map((item: string) => item.trim() === 'NULL' ? '' : item.trim());
+  return field.split(";").map((item: string) => item.trim() === 'NULL' ? '' : item.trim());
 }
 let processNote = (field: string | null) => {
   if (field === null || field === "NULL" || field === "") {
@@ -31,12 +30,12 @@ let processNote = (field: string | null) => {
   return field.split(";").map((item: string) => item.trim() === 'NULL' ? '' : item.trim());
 }
 
-let firstAlias = processAlias(FIRSTNAME_ALIAS as string);
-let middleAlias = processAlias(MIDDLENAME_ALIAS as string);
-let surAlias = processAlias(SURNAME_ALIAS as string);
+// let firstAlias = processAlias(FIRSTNAME_ALIAS as string);
+// let middleAlias = processAlias(MIDDLENAME_ALIAS as string);
+// let surAlias = processAlias(SURNAME_ALIAS as string);
 
 
-let maxAliasLength = Math.max(firstAlias.length, middleAlias.length, surAlias.length);
+// let maxAliasLength = Math.max(firstAlias.length, middleAlias.length, surAlias.length);
 
 
   let address:string[];
@@ -65,12 +64,14 @@ let maxAliasLength = Math.max(firstAlias.length, middleAlias.length, surAlias.le
   let notes = processNote(NOTES as string);
 
   
-  while (firstAlias.length < maxAliasLength) firstAlias.push('');
-  while (middleAlias.length < maxAliasLength) middleAlias.push('');
-  while (surAlias.length < maxAliasLength) surAlias.push('');
+  // while (firstAlias.length < maxAliasLength) firstAlias.push('');
+  // while (middleAlias.length < maxAliasLength) middleAlias.push('');
+  // while (surAlias.length < maxAliasLength) surAlias.push('');
 
-  const alias = firstAlias.map((item: string, index: number) => `${item} ${middleAlias[index]} ${surAlias[index]}`);
-return (
+  // const alias = firstAlias.map((item: string, index: number) => `${item} ${middleAlias[index]} ${surAlias[index]}`);
+
+const alias=WHOLE_NAME_ALIAS ? WHOLE_NAME_ALIAS.slice(1,-1).split(',') :[]
+  return (
     <main className="max-w-1320 mx-auto p-8 rounded-20 bg-white my-7 text-[#111111]">
       <section className="mb-10">
         <h1 className="text-xl mb-[14px]">Core Details</h1>
@@ -126,20 +127,20 @@ return (
      {Nation && <section className="mb-10">
         <h1 className="text-xl mb-7">Nationalities</h1>
             <div className={'flex flex-row gap-3'}>
-       {Nation.split(',').map((nation:string, i:number)=> <div key={i}>
-       <Image  title={NATION_NAME?.split(',')[i]} className={'border'} quality={100}  src={`/images/flags/${nation?.toLowerCase().trim()}.svg`} alt="" width={50} height={30} />
+       {Nation.split(';').map((nation:string, i:number)=> <div key={i}>
+       <Image  title={NATION_NAME?.split(';')[i]} className={'border'} quality={100}  src={`/images/flags/${nation?.toLowerCase().trim()}.svg`} alt="" width={50} height={30} />
        </div>)} 
        </div>
             {/* {NATION_NAME && <p className={'mt-3'}>{NATION_NAME}</p>} */}
         {/* <p>{Nation}</p> */}
       </section>}
-     {BIRTHDATE &&  <section className="mb-10">
+     {BIRTHDATE &&  <section className="mt-16 mb-10 space-y-3 ">
         <h1 className="text-xl mb-7">Dates of Birth</h1>
-        <p>{BIRTHDATE}</p>
+       {BIRTHDATE.split(';').map((date:string,i:number)=> <p className={'border-b py-3'}  key={i}>{date}</p>)} 
       </section>}
-     {DEATHDATE &&  <section className="mb-10">
-        <h1 className="text-xl mb-7">Dates of death</h1>
-        <p>{DEATHDATE}</p>
+     {DEATHDATE &&  <section className="mt-16 mb-10">
+     <h1 className="text-xl mb-7">Dates of Birth</h1>
+       {DEATHDATE.split(';').map((date:string,i:number)=> <p className={'border-b py-3'}  key={i}>{date}</p>)} 
       </section>}
     {ADRESS&&address &&  <section className="mb-10">
         <h1 className="text-xl mb-[14px]">Addresses</h1>
@@ -184,6 +185,29 @@ return (
        <p key={i}>
           {note}
         </p>)}
+      </section>}
+
+      {(EU===0&&OFAC_NON_SDN===0&&UN===0&&KOFIU===0&&OFAC_SDN===0) ? "" :  
+    <section className={'mt-10'}>
+        <h1 className="text-xl mb-7">Listed</h1>
+      
+      <div className={'flex flex-col gap-3'}> 
+      {EU!==0 &&<p>
+          {"Listed as sanctioned person by EU"}
+        </p>}
+       {OFAC_NON_SDN!==0 &&<p>
+          {"Listed as sanctioned person by OFAC Non-SDN List"}
+        </p>}
+       {UN!==0 &&<p>
+          {"Listed as sanctioned person by UN"}
+        </p>}
+       {KOFIU!==0 &&<p>
+          {"Listed as sanctioned person by KOFIU"}
+        </p>}
+       {OFAC_SDN!==0 &&<p>
+          {"Listed as sanctioned person by OFAC SDN List"}
+        </p>}
+        </div>
       </section>}
     </main>
   );

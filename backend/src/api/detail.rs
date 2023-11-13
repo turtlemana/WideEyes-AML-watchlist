@@ -23,9 +23,15 @@ pub struct ProfileDetail {
     FIRSTNAME_ALIAS: Option<String>,
     MIDDLENAME_ALIAS: Option<String>,
     SURNAME_ALIAS: Option<String>,
+    WHOLE_NAME_ALIAS: Option<String>,
     WHOLE_NAME: Option<String>,
     NATION_NAME: Option<String>,
     DEATHDATE: Option<String>,
+    EU: Option<i8>,
+    OFAC_NON_SDN: Option<i8>,
+    UN: Option<i8>,
+    KOFIU: Option<i8>,
+    OFAC_SDN: Option<i8>,
 }
 
 #[derive(FromRow, Serialize, Deserialize)]
@@ -145,7 +151,7 @@ pub struct BUSINESS_PROFILE {
     NATION_CODE: Option<String>,
     NOTES: Option<String>,
     EU: Option<i8>,
-    OFAC: Option<i8>,
+    OFAC_NON_SDN: Option<i8>,
     UN: Option<i8>,
     KOFIU: Option<i8>,
     OFAC_SDN: Option<i8>,
@@ -163,7 +169,7 @@ async fn business_profile(pool: web::Data<MySqlPool>, wecd: web::Path<String>) -
         "SELECT WE_CD, NAME,
         ADDRESS,CONTACT_KEY,CONTACT_VALUE,IDENTI_KEY,IDENTI_VALUE,IDENTI_DETAIL_KEY,
         IDENTI_DETAIL_VALUE,NATION_NAME,
-        NOTES,NATION_CODE,ALIAS,EU,OFAC,UN,KOFIU,OFAC_SDN,VES_CALL,VES_GROSS,VES_TONNAGE,VES_FLAG,VES_OWNER,VES_TYPE
+        NOTES,NATION_CODE,ALIAS,EU,OFAC_NON_SDN,UN,KOFIU,OFAC_SDN,VES_CALL,VES_GROSS,VES_TONNAGE,VES_FLAG,VES_OWNER,VES_TYPE
         FROM BUSINESS_PROFILE
         WHERE WE_CD = ?"
     );
@@ -188,7 +194,7 @@ async fn profile_detail(pool: web::Data<MySqlPool>, wecd: web::Path<String>) -> 
         "SELECT WE_CD, FIRSTNAME, MIDDLENAME, SURNAME, GENDER,
         ADRESS,BIRTHDATE,CONTACT_KEY,CONTACT_VALUE,IDENTI_KEY,IDENTI_VALUE,Nation,
         NOTES,PROFIL_IMG,DATASET,FIRSTNAME_ALIAS,MIDDLENAME_ALIAS,
-        SURNAME_ALIAS,WHOLE_NAME,NATION_NAME,DEATHDATE
+        SURNAME_ALIAS,WHOLE_NAME_ALIAS,WHOLE_NAME,NATION_NAME,DEATHDATE,EU,OFAC_NON_SDN,UN,KOFIU,OFAC_SDN
         FROM PROFILE_DETAILS
         WHERE WE_CD = ?"
     );

@@ -17,7 +17,7 @@ const Layout = ({ isMobile, children,isLogin,setIsLogin }: Props) => {
   return (
     <>
       {Top}
-      <div className={isMobile ? "mt-16" : ""}>{children}</div>
+      <div className={isMobile ? "mt-16" : "min-h-screen"}>{children}</div>
       {/* {Bottom} */}
     </>
   );

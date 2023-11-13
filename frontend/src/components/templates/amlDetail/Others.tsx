@@ -142,7 +142,7 @@ const Others = ({data,evidenceData}:Props) => {
         Regulatory Enforcement List ({regulatoryData.length})
       </article> }
      {poiData.length>0 && <article onClick={()=>setDatasetType("poi")} className={`ml-8 py-2 px-3 border border-solid rounded-20 font-bold cursor-pointer border-gray-900 ${datasetType ==="poi" && "bg-gray-900 text-white " } w-fit`}>
-      Profile of Intest ({poiData.length})
+      Profile of Interest ({poiData.length})
       </article> }
       {ddData.length>0 && <article onClick={()=>setDatasetType("dd")} className={`ml-8 py-2 px-3 border border-solid rounded-20 font-bold cursor-pointer border-gray-900 ${datasetType ==="dd" && "bg-gray-900 text-white " } w-fit`}>
       Disqualified Director ({ddData.length})

@@ -81,7 +81,7 @@ const Main = ({searchValid, searchKey,searchResult }: Props) => {
                 <tr className="text-[14px] text-gray-600 h-11">
                   <th className="text-left pl-8">QR Code</th>
                   <th className="text-left">Name</th>
-                  <th className=" text-left">Countries</th>
+                  <th className=" text-left pl-8">Countries</th>
                   {/* <th className="text-left">Datasets</th> */}
                   {/* <th className="px-8">Match</th> */}
                 </tr>

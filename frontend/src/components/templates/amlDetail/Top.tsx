@@ -41,7 +41,7 @@ const [isClient, setIsClient] = useState(false);
         <div className="flex flex-wrap max-w-[420px] gap-2 h-full">
 
 
-         {DATASET && DATASET.split(",").map((dataset:string,i:number) => (  
+         {DATASET && DATASET.split(";").map((dataset:string,i:number) => (  
          <div key={i}
               className="flex items-center justify-center px-2 max-w-[110px] h-6 bg-gray-200 rounded-20 text-center py-1.5 text-xs"
             title={getTitleFromDataset(dataset)}

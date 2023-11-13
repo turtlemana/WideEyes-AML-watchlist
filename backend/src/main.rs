@@ -1,16 +1,17 @@
 mod api;
 
-use api::search::{main_search,qr_search,business_main_search,business_qr_search};
-use api::detail::{business_profile,profile_detail,pep_positions,sanctions,associations,reputational_risk,other_dataset_rel,other_dataset_dd,other_dataset_poi,evidence};
-use api::user::{login,validate,logout};
-use actix_web::{web, App, HttpServer,http::header};
-use sqlx::MySqlPool;
-use dotenv::dotenv;
-use std::env;
 use actix_cors::Cors;
-
-
-
+use actix_web::{http::header, web, App, HttpServer};
+use api::dashboard::{dashboard, link, news, status};
+use api::detail::{
+    associations, business_profile, evidence, other_dataset_dd, other_dataset_poi,
+    other_dataset_rel, pep_positions, profile_detail, reputational_risk, sanctions,
+};
+use api::search::{business_main_search, business_qr_search, main_search, qr_search};
+use api::user::{login, logout, user_info, validate};
+use dotenv::dotenv;
+use sqlx::MySqlPool;
+use std::env;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -29,18 +30,18 @@ async fn main() -> std::io::Result<()> {
     }
 
     HttpServer::new(move || {
-        let cors = Cors::default()  
+        let cors = Cors::default()
             .allowed_origin("http://localhost:3000")
             .allowed_methods(vec!["GET", "POST"])
-            .allowed_headers(vec![
-                header::ACCEPT, 
-                header::CONTENT_TYPE,
-                header::COOKIE
-            ])
-            .supports_credentials(); 
+            .allowed_headers(vec![header::ACCEPT, header::CONTENT_TYPE, header::COOKIE])
+            .supports_credentials();
         App::new()
-        .wrap(cors)
+            .wrap(cors)
             .app_data(web::Data::new(pool.clone()))
+            .service(dashboard)
+            .service(status)
+            .service(news)
+            .service(link)
             .service(qr_search)
             .service(main_search)
             .service(business_qr_search)
@@ -58,7 +59,7 @@ async fn main() -> std::io::Result<()> {
             .service(login)
             .service(validate)
             .service(logout)
-        
+            .service(user_info)
     })
     .bind("127.0.0.1:7878")?
     .run()

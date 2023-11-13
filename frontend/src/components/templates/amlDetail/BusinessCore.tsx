@@ -9,11 +9,11 @@ const BusinessCore = ({profileData}:Props) => {
 
   
  const {ADDRESS,CONTACT_KEY,CONTACT_VALUE,NATION_CODE,NAME,ALIAS,NATION_NAME
-,NOTES,IDENTI_KEY,IDENTI_VALUE,IDENTI_DETAIL_KEY,IDENTI_DETAIL_VALUE,WE_CD,EU,OFAC,UN,KOFIU,OFAC_SDN,VES_CALL,VES_FLAG,VES_GROSS,VES_OWNER,VES_TONNAGE,VES_TYPE} =profileData
+,NOTES,IDENTI_KEY,IDENTI_VALUE,IDENTI_DETAIL_KEY,IDENTI_DETAIL_VALUE,WE_CD,EU,OFAC_NON_SDN,UN,KOFIU,OFAC_SDN,VES_CALL,VES_FLAG,VES_GROSS,VES_OWNER,VES_TONNAGE,VES_TYPE} =profileData
 
 let listed = {
     EU:EU,
-    OFAC:OFAC,
+    OFAC:OFAC_NON_SDN,
     UN:UN,
     KOFIU:KOFIU
 }
@@ -47,7 +47,7 @@ let processNote = (field: string | null) => {
   } else {
       let cleanedString = ADDRESS?.replace(/[\[\]"']/g, '');
       cleanedString = cleanedString?.replace(/^,+/, '');
-      let parts = cleanedString?.split(';') ?? [];
+      let parts = cleanedString?.split('/') ?? [];
       address=parts
       // let addressPart = parts.slice(0, -1).filter((part:string) => part !== '').join(' ');
       // let businessPart = parts[parts.length - 1];
@@ -159,7 +159,7 @@ return (
         ))}
     </section>
 )}
-      {(OFAC_SDN==1) && (
+      {(OFAC_SDN==1) && (VES_CALL || VES_GROSS || VES_TONNAGE || VES_FLAG || VES_OWNER || VES_TYPE) && (
     <section className="mb-10">
         <h1 className="text-xl mb-7">Vessel Details</h1>
            {VES_CALL && <div  className="flex gap-20 mb-4">
@@ -207,7 +207,7 @@ return (
           {note}
         </p>)}
       </section>}
-    {(EU===0&&OFAC===0&&UN===0&&KOFIU===0&&OFAC_SDN===0) ? "" :  
+    {(EU===0&&OFAC_NON_SDN===0&&UN===0&&KOFIU===0&&OFAC_SDN===0) ? "" :  
     <section className={'mt-10'}>
         <h1 className="text-xl mb-7">Listed</h1>
       
@@ -215,7 +215,7 @@ return (
       {EU!==0 &&<p>
           {"Listed as sanctioned business by EU"}
         </p>}
-       {OFAC!==0 &&<p>
+       {OFAC_NON_SDN!==0 &&<p>
           {"Listed as sanctioned business by OFAC Non-SDN List"}
         </p>}
        {UN!==0 &&<p>

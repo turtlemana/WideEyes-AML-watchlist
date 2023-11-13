@@ -26,7 +26,7 @@ interface BusinessProfile {
     NATION_CODE:string | null,
     NOTES:string | null,
     EU:number, 
-    OFAC:number, 
+    OFAC_NON_SDN:number, 
     UN:number, 
     KOFIU:number, 
     OFAC_SDN:number,
@@ -57,9 +57,15 @@ interface ProfileDetail {
     FIRSTNAME_ALIAS: string | null,
     MIDDLENAME_ALIAS:string | null,
     SURNAME_ALIAS:string | null,
+    WHOLE_NAME_ALIAS:string | null,
     WHOLE_NAME:string | null,
     NATION_NAME:string | null,
-    DEATHDATE:string | null
+    DEATHDATE:string | null,
+    EU:number, 
+    OFAC_NON_SDN:number, 
+    UN:number, 
+    KOFIU:number, 
+    OFAC_SDN:number,
 }
 
 interface PEP_POSITIONS{
